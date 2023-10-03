@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- Google Fonts -->
+    <link rel="icon" href="/assets/images/csv.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/home.css">
+    <link rel="stylesheet" href="/assets/css/_header.css">
+</head>
+
+<body>
+    <div class="content">
+        <!-- Include header partial -->
+        <%- include('_header') %>
+
+        <!-- Search Bar -->
+        <form action="/" class="search-bar" method="get">
+            <input type="text" name="s" class="search-input" placeholder="Type full filename to Search" value="<%= searchVal || '' %>">
+            <!-- Search Bar Icon -->
+            <button><i class="bi bi-search"></i></button>
+        </form>
+
+        <!-- Upload Area for Browse/Drag and Drop -->
+        <h3>Upload Files</h3>
+        <div class="upload-box" onclick="handleUploadClick()">
+            <img src="/assets/images/csv.png" alt="">
+            <h4>Drag and Drop Files, or Click to Browse</h4>
+            <p>Supports CSV files only</p>
+        </div>
+
+        <!-- Files Container -->
+        <div class="files-container">
+            <div class="files-header">
+                <h3>Files</h3>
+                <!-- View Toggler -->
+                <div class="view-toggler">
+                    <div class="grid-view view-mode">
+                        <i class="bi bi-grid"></i>
+                    </div>
+                    <div class="list-view view-mode">
+                        <i class="bi bi-list-ul"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files -->
+            <table class="files">
+                <thead class="thead">
+                    <tr>
+                        <th>SL. No</th>
+                        <th class="header-1">File Name</th>
+                        <th>Size</th>
+                        <th>View</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (searchVal && searchVal !== '') { %>
+                        <!-- Search value is provided -->
+                        <% for (let i = 0; i < files.length; i++) { %>
+                            <% let sl = i + 1; %>
+                            <% let file = files[i]; %>
+                            <% if (file.originalname.includes(searchVal)) { %>
+                                <tr>
+                                    <td><%= sl %></td>
+                                    <td><%= file.originalname %></td>
+                                    <td><%= file.size %></td>
+                                    <td><a href="/view/<%= file._id %>">View</a></td>
+                                    <td><a href="/delete/<%= file._id %>">Delete</a></td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    <% } else { %>
+                        <!-- No search value provided, display all data -->
+                        <% for (let i = 0; i < files.length; i++) { %>
+                            <% let sl = i + 1; %>
+                            <% let file = files[i]; %>
+                            <tr>
+                                <td><%= sl %></td>
+                                <td><%= file.originalname %></td>
+                                <td><%= file.size %></td>
+                                <td><a href="/view/<%= file._id %>">View</a></td>
+                                <td><a href="/delete/<%= file._id %>">Delete</a></td>
+                            </tr>
+                        <% } %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="/assets/js/home.js"></script>
+    <script src="/assets/js/_header.js"></script>
+</body>
+
+</html>
